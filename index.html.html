@@ -1,0 +1,446 @@
+<style>
+  :root{
+    --navy:#1B2A4A; --navy-deep:#0F1B33; --saffron:#C87F1E; --saffron-light:#F3E1C4;
+    --green:#2F7A4D; --amber:#C87F1E; --red:#B23A2E; --paper:#F4F1E9; --paper-card:#FFFFFF;
+    --ink:#20242C; --ink-soft:#5B5F66; --hair:#DCD8CC;
+  }
+  .sbw *{box-sizing:border-box;}
+  .sbw{
+    font-family:'Noto Sans','Nirmala UI','Mangal','Devanagari Sangam MN',Arial,sans-serif;
+    background:var(--paper); border:1px solid var(--hair); border-radius:14px;
+    max-width:560px; margin:0 auto; overflow:hidden; color:var(--ink);
+  }
+  .sb-head{background:var(--navy); color:#fff; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .sb-brand{display:flex; align-items:center; gap:10px;}
+  .sb-mark{width:34px; height:34px; border-radius:9px; background:var(--saffron); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; flex-shrink:0;}
+  .sb-title{font-weight:600; font-size:15px; line-height:1.2;}
+  .sb-sub{font-size:11.5px; color:#C7CEDD; margin-top:1px;}
+  .sb-badge{font-size:9.5px; color:#B9E3C6; background:rgba(47,122,77,0.35); padding:2px 7px; border-radius:9px; margin-top:3px; display:inline-block; font-weight:600; letter-spacing:0.02em;}
+  .sb-lang{display:flex; background:rgba(255,255,255,0.12); border-radius:20px; padding:2px; flex-shrink:0;}
+  .sb-lang button{border:none; background:transparent; color:#D8DEEC; font-size:12.5px; font-weight:600; padding:5px 12px; border-radius:16px; cursor:pointer; font-family:inherit;}
+  .sb-lang button.active{background:#fff; color:var(--navy);}
+  .sb-body{padding:14px 14px 0; height:430px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;}
+  .sb-row{display:flex; gap:8px; max-width:92%;}
+  .sb-row.user{align-self:flex-end; flex-direction:row-reverse;}
+  .sb-bubble{padding:9px 13px; border-radius:14px; font-size:14px; line-height:1.55; white-space:pre-wrap;}
+  .sb-row.bot .sb-bubble{background:var(--paper-card); border:1px solid var(--hair); border-top-left-radius:4px;}
+  .sb-row.user .sb-bubble{background:var(--navy); color:#fff; border-top-right-radius:4px;}
+  .sb-avatar{width:26px; height:26px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; margin-top:2px;}
+  .sb-row.bot .sb-avatar{background:var(--saffron-light); color:var(--saffron);}
+  .sb-row.user .sb-avatar{background:var(--navy-deep); color:#C7CEDD;}
+  .sb-img-thumb{max-width:180px; border-radius:8px; display:block; margin-bottom:6px; border:1px solid rgba(255,255,255,0.3);}
+  .sb-meter-card{background:var(--paper-card); border:1px solid var(--hair); border-radius:14px; border-top-left-radius:4px; padding:12px 14px 10px; margin-left:34px; max-width:260px;}
+  .sb-meter-label{font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-soft); font-weight:600; margin-bottom:4px;}
+  .sb-gauge-wrap{display:flex; flex-direction:column; align-items:center;}
+  .sb-verdict{font-size:16px; font-weight:700; margin-top:2px;}
+  .sb-verdict.SAFE{color:var(--green);} .sb-verdict.CAUTION{color:var(--amber);} .sb-verdict.DANGER{color:var(--red);}
+  .sb-chips{display:flex; gap:7px; padding:0 14px 10px; flex-wrap:wrap;}
+  .sb-chip{font-size:12.5px; font-family:inherit; background:#fff; border:1px solid var(--hair); color:var(--navy); padding:6px 11px; border-radius:16px; cursor:pointer; font-weight:500;}
+  .sb-chip:hover{border-color:var(--saffron);}
+  .sb-foot{border-top:1px solid var(--hair); padding:10px 12px; background:var(--paper-card);}
+  .sb-preview{display:flex; flex-direction:column; gap:8px; background:var(--saffron-light); color:#7A5011; font-size:12.5px; padding:8px 10px; border-radius:8px; margin-bottom:8px;}
+  .sb-preview-top{display:flex; align-items:center; gap:8px;}
+  .sb-preview-top button{margin-left:auto; border:none; background:none; color:#7A5011; font-weight:700; cursor:pointer; font-size:14px;}
+  .sb-flag-row{display:flex; gap:6px; flex-wrap:wrap;}
+  .sb-flag{font-size:11.5px; font-family:inherit; background:#fff; border:1px solid #E3C892; color:#7A5011; padding:4px 9px; border-radius:12px; cursor:pointer; font-weight:600;}
+  .sb-flag.on{background:#7A5011; color:#fff; border-color:#7A5011;}
+  .sb-input-row{display:flex; align-items:flex-end; gap:8px;}
+  .sb-attach{width:36px; height:36px; border-radius:50%; border:1px solid var(--hair); background:#fff; color:var(--navy); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:16px;}
+  .sb-textarea{flex:1; border:1px solid var(--hair); border-radius:18px; padding:9px 14px; font-size:14px; font-family:inherit; resize:none; max-height:80px; min-height:36px; line-height:1.4; outline:none;}
+  .sb-textarea:focus{border-color:var(--navy);}
+  .sb-send{width:36px; height:36px; border-radius:50%; border:none; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:15px;}
+  .sb-send:disabled{background:#A8ADB8; cursor:default;}
+  .sb-helpline{text-align:center; font-size:11px; color:var(--ink-soft); padding:8px 14px 12px; border-top:1px solid var(--hair);}
+  .sb-helpline b{color:var(--red);}
+  .sb-body::-webkit-scrollbar{width:6px;} .sb-body::-webkit-scrollbar-thumb{background:#D3CEC0; border-radius:3px;}
+</style>
+
+<div class="sbw" id="sbw">
+  <div class="sb-head">
+    <div class="sb-brand">
+      <div class="sb-mark">सु</div>
+      <div>
+        <div class="sb-title" id="sb-title">Suraksha</div>
+        <div class="sb-sub" id="sb-sub">UPI fraud safety assistant</div>
+        <div class="sb-badge" id="sb-badge">OFFLINE MODE</div>
+      </div>
+    </div>
+    <div class="sb-lang">
+      <button id="sb-lang-en" class="active">EN</button>
+      <button id="sb-lang-hi">हिं</button>
+    </div>
+  </div>
+
+  <div class="sb-body" id="sb-body"></div>
+  <div class="sb-chips" id="sb-chips"></div>
+
+  <div class="sb-foot">
+    <div id="sb-preview-slot"></div>
+    <div class="sb-input-row">
+      <button class="sb-attach" id="sb-attach" title="Attach screenshot" aria-label="Attach screenshot">📎</button>
+      <input type="file" id="sb-file" accept="image/*" style="display:none;">
+      <textarea class="sb-textarea" id="sb-text" rows="1"></textarea>
+      <button class="sb-send" id="sb-send" aria-label="Send">➤</button>
+    </div>
+  </div>
+  <div class="sb-helpline" id="sb-helpline"></div>
+</div>
+
+<script>
+(function(){
+
+  const STR = {
+    en: {
+      sub: "UPI fraud safety assistant", badgeText: "OFFLINE MODE",
+      placeholder: "Paste a message or ask a question…",
+      chips: ["Paste a suspicious message", "Ask a UPI safety question", "I already lost money"],
+      helpline: "Suspect fraud right now? Call <b>1930</b> (National Cybercrime Helpline) or report at cybercrime.gov.in",
+      greeting: "Hi, I'm Suraksha, running fully offline. Paste a message you're unsure about, upload a screenshot, or ask me a UPI safety question.",
+      you: "You",
+      error: "I couldn't process that. Try rephrasing, or paste the exact message text.",
+      verdictLabel: "Suraksha meter",
+      SAFE: "Looks safe", CAUTION: "Be careful", DANGER: "Danger — stop",
+      imgAttached: "Screenshot attached — tap anything it shows, then send",
+      flagPin: "Asks to enter PIN", flagRefund: "Says refund / prize", flagUnknown: "Unknown sender / urgent",
+      lostMoneySteps: "Here's what to do right now:\n1. Call your bank's official helpline (from their app or card) to freeze UPI immediately.\n2. Note the transaction ID / reference number from your app.\n3. Report at cybercrime.gov.in or call 1930, the National Cybercrime Helpline.\nDo this quickly — acting fast improves the chance of stopping further loss.",
+      noFlagGeneric: "I didn't find a strong scam pattern in this specific text or your selections, but that doesn't guarantee it's safe. If money or a PIN is involved anywhere in this, treat it with caution and verify through your bank's official app before acting.",
+      faqFallback: "I don't have a specific offline answer for that exact question. Here are things I can help with:",
+    },
+    hi: {
+      sub: "यूपीआई सुरक्षा सहायक", badgeText: "ऑफलाइन मोड",
+      placeholder: "कोई संदेश पेस्ट करें या सवाल पूछें…",
+      chips: ["संदिग्ध संदेश पेस्ट करें", "यूपीआई सुरक्षा सवाल पूछें", "मेरे पैसे पहले ही चले गए"],
+      helpline: "अभी धोखाधड़ी का शक है? <b>1930</b> (राष्ट्रीय साइबर हेल्पलाइन) पर कॉल करें या cybercrime.gov.in पर रिपोर्ट करें",
+      greeting: "नमस्ते, मैं सुरक्षा हूं, पूरी तरह ऑफलाइन चल रही हूं। कोई संदेश पेस्ट करें जिस पर शक हो, स्क्रीनशॉट अपलोड करें, या यूपीआई सुरक्षा से जुड़ा सवाल पूछें।",
+      you: "आप",
+      error: "इसे समझ नहीं पाई। कृपया दोबारा लिखें या सही संदेश पेस्ट करें।",
+      verdictLabel: "सुरक्षा मीटर",
+      SAFE: "सुरक्षित लगता है", CAUTION: "सावधान रहें", DANGER: "खतरा — रुक जाइए",
+      imgAttached: "स्क्रीनशॉट जुड़ा है — जो भी लागू हो उसे चुनें, फिर भेजें",
+      flagPin: "PIN डालने को कहा", flagRefund: "रिफंड / इनाम बताया", flagUnknown: "अनजान भेजने वाला / जल्दी करने को कहा",
+      lostMoneySteps: "अभी यह करें:\n1. UPI तुरंत रोकने के लिए अपने बैंक के आधिकारिक हेल्पलाइन नंबर (ऐप या कार्ड से) पर कॉल करें।\n2. अपने ऐप से ट्रांज़ैक्शन ID / रेफरेंस नंबर नोट करें।\n3. cybercrime.gov.in पर रिपोर्ट करें या 1930 पर कॉल करें।\nजितनी जल्दी करेंगे, नुकसान रुकने की संभावना उतनी ज़्यादा है।",
+      noFlagGeneric: "इस संदेश या आपकी चुनी गई बातों में कोई स्पष्ट धोखाधड़ी का संकेत नहीं मिला, लेकिन इसका मतलब यह नहीं कि यह पूरी तरह सुरक्षित है। अगर इसमें पैसे या PIN की बात है, तो सावधान रहें और बैंक के आधिकारिक ऐप से पुष्टि करें।",
+      faqFallback: "इस सवाल का सटीक ऑफलाइन जवाब मेरे पास नहीं है। मैं इनमें मदद कर सकती हूं:",
+    }
+  };
+
+  const CATEGORIES = [
+    { id:'pin_receive', weight:3,
+      en:['enter your pin','enter upi pin','pin to receive','enter pin to get','pin to collect'],
+      hi:['pin daalo','pin dalen','pin daal kar','pin daal ke','पिन डालो','पिन डालें'],
+      exp:{ en:"This asks you to enter your UPI PIN. A PIN is only ever needed to SEND money, never to receive it — entering it here would pay the scammer, not you.",
+            hi:"यह आपसे UPI PIN डालने को कह रहा है। PIN सिर्फ पैसे भेजने के लिए ज़रूरी होता है, पाने के लिए नहीं — यहां PIN डालने से पैसा आपसे निकल जाएगा।" } },
+    { id:'otp', weight:3,
+      en:['share otp','send otp','tell me the otp','read out otp','otp bata','verify otp'],
+      hi:['otp bata','otp de do','otp bhejo','otp share karo','ओटीपी बताओ','ओटीपी दे दो'],
+      exp:{ en:"This is asking for your OTP. No genuine bank or UPI process ever needs you to read out or share an OTP with anyone, including staff.",
+            hi:"यह आपसे OTP मांग रहा है। किसी भी असली बैंक या UPI प्रक्रिया में OTP किसी को भी बताने की ज़रूरत कभी नहीं होती, चाहे वह खुद को स्टाफ बताए।" } },
+    { id:'screen_share', weight:3,
+      en:['anydesk','teamviewer','quick support','screen share','remote access','install this app'],
+      hi:['anydesk','teamviewer','screen share karo','app install karo','remote access'],
+      exp:{ en:"This involves installing a remote-access app (like AnyDesk/TeamViewer). No genuine bank or UPI support ever asks you to install such an app — it lets someone else control your phone.",
+            hi:"इसमें remote-access ऐप (जैसे AnyDesk/TeamViewer) इंस्टॉल करने को कहा गया है। कोई भी असली बैंक या UPI सपोर्ट ऐसा ऐप इंस्टॉल करने को कभी नहीं कहता — इससे कोई और आपके फोन को कंट्रोल कर सकता है।" } },
+    { id:'collect', weight:2,
+      en:['collect request','approve request','payment request','collect kiya','money request'],
+      hi:['collect request','request bheja','collect kiya','कलेक्ट रिक्वेस्ट'],
+      exp:{ en:"This looks like a 'collect request', which is a request FOR your money dressed up as if money is coming to you. Approving it and entering your PIN would send money out, not bring it in.",
+            hi:"यह एक 'कलेक्ट रिक्वेस्ट' जैसा लगता है, जो असल में आपसे पैसे मांगने का तरीका है, भले ही लगे कि पैसा आपको मिल रहा है। इसे स्वीकार कर PIN डालने से पैसा आपके पास से निकल जाएगा।" } },
+    { id:'qr', weight:2,
+      en:['scan this qr','scan the qr','qr code to receive','scan and get','qr scan karke'],
+      hi:['qr scan karke','qr code se paisa','स्कैन करके पैसा'],
+      exp:{ en:"Scanning a QR code and entering your PIN is always a payment going OUT, never a way to receive money. You never need to scan anything to get paid.",
+            hi:"QR कोड स्कैन करके PIN डालना हमेशा पैसा भेजने का तरीका है, पैसा पाने का नहीं। पैसा पाने के लिए कभी भी कुछ स्कैन करने की ज़रूरत नहीं होती।" } },
+    { id:'kyc', weight:2,
+      en:['kyc update','kyc expire','account will be blocked','kyc verify','account suspend','kyc pending'],
+      hi:['kyc update','kyc expire','account band','kyc verify','केवाईसी अपडेट','अकाउंट बंद'],
+      exp:{ en:"This threatens that your account/KYC will expire or be blocked unless you act via a link or call-back number. Banks don't suspend accounts over an unverified SMS — check only through your bank's official app or a branch visit.",
+            hi:"यह डरा रहा है कि आपका अकाउंट/KYC बंद हो जाएगा अगर आपने लिंक या नंबर पर तुरंत कार्रवाई नहीं की। बैंक किसी अनवेरिफाइड SMS की वजह से अकाउंट बंद नहीं करते — सिर्फ बैंक के आधिकारिक ऐप या ब्रांच से पुष्टि करें।" } },
+    { id:'fake_helpline', weight:2,
+      en:['customer care number','helpline number','call this number','toll free number'],
+      hi:['customer care number','helpline number','इस नंबर पर कॉल','टोल फ्री नंबर'],
+      exp:{ en:"Be careful with customer-care numbers from SMS, search results, or social media — many are fake. Get support numbers only from your bank's app or the back of your card.",
+            hi:"SMS, सर्च रिजल्ट या सोशल मीडिया पर मिले कस्टमर केयर नंबर से सावधान रहें, कई नकली होते हैं। सपोर्ट नंबर सिर्फ अपने बैंक के ऐप या कार्ड के पीछे से लें।" } },
+    { id:'advance_fee', weight:2,
+      en:['registration fee','task deposit','pay first','investment double','advance fee','small payment to unlock'],
+      hi:['registration fee','pehle payment karo','advance fee','investment double','रजिस्ट्रेशन फीस'],
+      exp:{ en:"Any offer that asks YOU to pay first to 'unlock' a bigger reward, job, or return is a classic advance-fee scam pattern.", 
+            hi:"कोई भी ऐसा ऑफर जिसमें बड़ा इनाम, नौकरी या रिटर्न पाने के लिए पहले आपको पैसे देने कहा जाए, वह एक क्लासिक एडवांस-फीस स्कैम है।" } },
+    { id:'unknown_link', weight:2,
+      en:['bit.ly','tinyurl','click this link','click here to claim'],
+      hi:['bit.ly','link par click','यहां क्लिक करें'],
+      exp:{ en:"This uses a shortened or unfamiliar link. Never enter banking details after clicking an unknown link from SMS/WhatsApp — go to your bank's app directly instead.",
+            hi:"इसमें एक छोटा या अनजान लिंक है। SMS/WhatsApp के किसी अनजान लिंक पर क्लिक करने के बाद कभी भी बैंकिंग जानकारी न डालें — सीधे अपने बैंक के ऐप पर जाएं।" } },
+    { id:'refund_prize', weight:1,
+      en:['refund','cashback','you have won','congratulations','lottery','prize','reward'],
+      hi:['refund','cashback','जीत गए','बधाई हो','lottery','इनाम'],
+      exp:{ en:"Unexpected refunds, cashback, or prize messages are a very common scam hook, especially combined with a link or urgency.",
+            hi:"अचानक रिफंड, कैशबैक या इनाम का संदेश एक बहुत आम धोखाधड़ी का तरीका है, खासकर जब उसके साथ लिंक या जल्दी करने को कहा जाए।" } },
+    { id:'urgency', weight:1,
+      en:['immediately','within 10 minutes','expire today','last chance','act now'],
+      hi:['turant','jaldi karo','abhi karo','last chance','आज ही'],
+      exp:{ en:"Artificial urgency ('act in 10 minutes', 'today only') is a pressure tactic scammers use so you don't stop to verify.",
+            hi:"जल्दी करने का दबाव ('10 मिनट में करो', 'आज ही') एक तरीका है ताकि आप रुककर जांच न करें।" } },
+  ];
+
+  const FAQS = [
+    { keys:['difference','collect request','receive money','fark','antar'],
+      en:"A collect request is someone ASKING you for money — approving it and entering your PIN sends money out. Someone actually sending you money needs no PIN or approval from you at all; it just shows up.",
+      hi:"कलेक्ट रिक्वेस्ट का मतलब है कोई आपसे पैसे मांग रहा है — इसे स्वीकार कर PIN डालने से पैसा आपसे निकल जाएगा। अगर कोई सच में आपको पैसे भेज रहा है, तो उसके लिए आपको कोई PIN या मंज़ूरी नहीं देनी होती, पैसा बस आ जाता है।" },
+    { keys:['upi pin','otp','difference pin otp'],
+      en:"UPI PIN is the secret code you set that authorises a payment — never share it. OTP is a one-time code sent to verify certain actions like adding a new device — also never share it with anyone.",
+      hi:"UPI PIN वह गुप्त कोड है जो पेमेंट को मंज़ूरी देता है — इसे कभी शेयर न करें। OTP एक बार का कोड है जो नया डिवाइस जोड़ने जैसे काम को वेरिफाई करने के लिए भेजा जाता है — इसे भी किसी से शेयर न करें।" },
+    { keys:['scan qr','qr code safe','scanning safe'],
+      en:"Scanning a QR code by itself does nothing — but if it opens a payment screen asking for your PIN, that scan is about to SEND money, never receive it.",
+      hi:"सिर्फ QR कोड स्कैन करने से कुछ नहीं होता — लेकिन अगर वह PIN मांगने वाली पेमेंट स्क्रीन खोले, तो वह स्कैन पैसा भेजने वाला है, पाने वाला नहीं।" },
+    { keys:['wrong person','sent money wrong','galat account'],
+      en:"If you sent money to the wrong UPI ID, contact your bank's official helpline immediately with the transaction ID, and also raise a complaint through your UPI app's 'report transaction' option. Fast action matters most.",
+      hi:"अगर आपने गलत UPI ID पर पैसे भेज दिए हैं, तो तुरंत ट्रांज़ैक्शन ID के साथ अपने बैंक के आधिकारिक हेल्पलाइन से संपर्क करें, और अपने UPI ऐप में 'report transaction' विकल्प से शिकायत भी दर्ज करें। जल्दी कार्रवाई सबसे ज़रूरी है।" },
+    { keys:['already lost money','fraud already happened','paisa chala gaya','scammed'],
+      en:"LOSTMONEY",
+      hi:"LOSTMONEY" },
+    { keys:['upi id safe share','share upi id'],
+      en:"Sharing your UPI ID (like a phone number or handle) alone is safe — it only lets people SEND you money or request from you (which you can decline). Never share your PIN or OTP alongside it.",
+      hi:"सिर्फ अपनी UPI ID (जैसे फोन नंबर या हैंडल) शेयर करना सुरक्षित है — इससे लोग आपको पैसे भेज सकते हैं या रिक्वेस्ट भेज सकते हैं (जिसे आप मना कर सकते हैं)। बस इसके साथ अपना PIN या OTP कभी शेयर न करें।" },
+    { keys:['kyc expire suddenly','kyc real','is kyc genuine'],
+      en:"KYC does need periodic updates, but banks never force it through an urgent SMS link with a countdown. Check your KYC status only inside your bank's official app or by visiting a branch.",
+      hi:"KYC को समय-समय पर अपडेट करना ज़रूरी होता है, लेकिन बैंक इसे कभी किसी अर्जेंट SMS लिंक और गिनती के साथ करवाते नहीं। अपना KYC स्टेटस सिर्फ बैंक के आधिकारिक ऐप में या ब्रांच जाकर जांचें।" },
+    { keys:['report fraud','cybercrime','helpline number report'],
+      en:"Report UPI fraud at cybercrime.gov.in or by calling 1930, the National Cybercrime Helpline. Also inform your bank immediately to freeze further transactions.",
+      hi:"UPI धोखाधड़ी की रिपोर्ट cybercrime.gov.in पर या 1930, राष्ट्रीय साइबर हेल्पलाइन पर कॉल करके करें। साथ ही आगे के ट्रांज़ैक्शन रोकने के लिए तुरंत अपने बैंक को भी सूचित करें।" },
+    { keys:['anydesk install support','remote app bank ask'],
+      en:"No genuine bank or UPI support agent will ever ask you to install a remote-access app like AnyDesk or TeamViewer. If asked, end the call and contact your bank directly through its official number.",
+      hi:"कोई भी असली बैंक या UPI सपोर्ट एजेंट कभी भी AnyDesk या TeamViewer जैसा remote-access ऐप इंस्टॉल करने को नहीं कहेगा। अगर कहा जाए, तो कॉल काट दें और अपने बैंक से सीधे उसके आधिकारिक नंबर पर संपर्क करें।" },
+    { keys:['transaction limit set safe','daily limit upi'],
+      en:"Setting a lower daily UPI transaction limit in your app is a good habit — it caps how much could be lost even if something goes wrong.",
+      hi:"अपने ऐप में UPI का दैनिक ट्रांज़ैक्शन लिमिट कम रखना एक अच्छी आदत है — इससे कुछ गलत होने पर भी नुकसान सीमित रहता है।" },
+    { keys:['bank reverse transaction','can bank get money back'],
+      en:"Banks can sometimes help freeze a receiving account quickly if you report within minutes to hours, but a completed UPI transfer usually cannot be reversed on request — speed in reporting matters most.",
+      hi:"अगर आप कुछ मिनटों से घंटों के अंदर रिपोर्ट करें, तो बैंक कभी-कभी पाने वाले खाते को जल्दी फ्रीज़ करने में मदद कर सकते हैं, लेकिन एक पूरा हो चुका UPI ट्रांसफर आमतौर पर मांगने पर वापस नहीं होता — जल्दी रिपोर्ट करना सबसे ज़रूरी है।" },
+  ];
+
+  let lang = 'en';
+  let pendingImage = null;
+  let selectedFlags = { pin:false, refund:false, unknown:false };
+
+  const els = {
+    body: document.getElementById('sb-body'),
+    chips: document.getElementById('sb-chips'),
+    text: document.getElementById('sb-text'),
+    send: document.getElementById('sb-send'),
+    attach: document.getElementById('sb-attach'),
+    file: document.getElementById('sb-file'),
+    previewSlot: document.getElementById('sb-preview-slot'),
+    sub: document.getElementById('sb-sub'),
+    badge: document.getElementById('sb-badge'),
+    helpline: document.getElementById('sb-helpline'),
+    langEn: document.getElementById('sb-lang-en'),
+    langHi: document.getElementById('sb-lang-hi')
+  };
+
+  function t(key){ return STR[lang][key]; }
+
+  function renderStatic(){
+    els.sub.textContent = t('sub');
+    els.badge.textContent = t('badgeText');
+    els.text.placeholder = t('placeholder');
+    els.helpline.innerHTML = t('helpline');
+    els.chips.innerHTML = '';
+    t('chips').forEach((c, i) => {
+      const b = document.createElement('button');
+      b.className = 'sb-chip'; b.textContent = c;
+      b.onclick = () => chipClick(i);
+      els.chips.appendChild(b);
+    });
+    renderPreview();
+  }
+
+  function chipClick(i){
+    if(i === 0){ els.text.value = lang === 'en' ? "Congratulations! You've received a Rs 5000 refund. Enter your UPI PIN on this link to collect before it expires: bit.ly/upi-refund123" : "बधाई हो! आपको ₹5000 का रिफंड मिला है। इसे पाने के लिए इस लिंक पर अपना UPI PIN डालें, जल्दी करें: bit.ly/upi-refund123"; }
+    else if(i === 1){ els.text.value = lang === 'en' ? "What is the difference between a UPI collect request and someone sending me money?" : "यूपीआई कलेक्ट रिक्वेस्ट और कोई मुझे पैसे भेजे, इसमें क्या फर्क है?"; }
+    else { els.text.value = lang === 'en' ? "I already lost money to a scam, what do I do now?" : "मेरे पैसे पहले ही एक धोखाधड़ी में चले गए हैं, अब मैं क्या करूं?"; }
+    els.text.focus();
+  }
+
+  function switchLang(l){
+    lang = l;
+    els.langEn.classList.toggle('active', l === 'en');
+    els.langHi.classList.toggle('active', l === 'hi');
+    renderStatic();
+  }
+  els.langEn.onclick = () => switchLang('en');
+  els.langHi.onclick = () => switchLang('hi');
+
+  function scrollDown(){ els.body.scrollTop = els.body.scrollHeight; }
+
+  function addUserMessage(text, imgDataUrl){
+    const row = document.createElement('div');
+    row.className = 'sb-row user';
+    const av = document.createElement('div'); av.className = 'sb-avatar'; av.textContent = t('you')[0];
+    const bubble = document.createElement('div'); bubble.className = 'sb-bubble';
+    if(imgDataUrl){ const img = document.createElement('img'); img.className = 'sb-img-thumb'; img.src = imgDataUrl; bubble.appendChild(img); }
+    if(text){ const span = document.createElement('span'); span.textContent = text; bubble.appendChild(span); }
+    row.appendChild(av); row.appendChild(bubble);
+    els.body.appendChild(row); scrollDown();
+  }
+
+  function addBotMessage(text, risk){
+    if(risk){
+      const card = document.createElement('div'); card.className = 'sb-meter-card';
+      card.innerHTML = '<div class="sb-meter-label">' + t('verdictLabel') + '</div>' + gaugeSvg(risk) +
+        '<div class="sb-gauge-wrap"><div class="sb-verdict ' + risk + '">' + t(risk) + '</div></div>';
+      els.body.appendChild(card);
+    }
+    const row = document.createElement('div'); row.className = 'sb-row bot';
+    const av = document.createElement('div'); av.className = 'sb-avatar'; av.textContent = 'सु';
+    const bubble = document.createElement('div'); bubble.className = 'sb-bubble'; bubble.textContent = text;
+    row.appendChild(av); row.appendChild(bubble);
+    els.body.appendChild(row); scrollDown();
+  }
+
+  function gaugeSvg(risk){
+    const rot = risk === 'SAFE' ? -60 : risk === 'DANGER' ? 60 : 0;
+    return '<svg width="180" height="100" viewBox="0 0 240 130">' +
+      '<path d="M 20 120 A 100 100 0 0 1 70 33.4" fill="none" stroke="#2F7A4D" stroke-width="18" stroke-linecap="round"/>' +
+      '<path d="M 70 33.4 A 100 100 0 0 1 170 33.4" fill="none" stroke="#C87F1E" stroke-width="18" stroke-linecap="round"/>' +
+      '<path d="M 170 33.4 A 100 100 0 0 1 220 120" fill="none" stroke="#B23A2E" stroke-width="18" stroke-linecap="round"/>' +
+      '<g transform="translate(120,120) rotate(' + rot + ')"><rect x="-3" y="-88" width="6" height="88" rx="3" fill="#20242C"/></g>' +
+      '<circle cx="120" cy="120" r="9" fill="#20242C"/></svg>';
+  }
+
+  els.attach.onclick = () => els.file.click();
+  els.file.onchange = (e) => {
+    const f = e.target.files[0]; if(!f) return;
+    const reader = new FileReader();
+    reader.onload = () => { pendingImage = reader.result; selectedFlags = { pin:false, refund:false, unknown:false }; renderPreview(); };
+    reader.readAsDataURL(f);
+  };
+
+  function renderPreview(){
+    els.previewSlot.innerHTML = '';
+    if(!pendingImage) return;
+    const bar = document.createElement('div'); bar.className = 'sb-preview';
+    const top = document.createElement('div'); top.className = 'sb-preview-top';
+    top.innerHTML = '<span>📎 ' + t('imgAttached') + '</span>';
+    const rm = document.createElement('button'); rm.textContent = '✕';
+    rm.onclick = () => { pendingImage = null; renderPreview(); };
+    top.appendChild(rm);
+    const flags = document.createElement('div'); flags.className = 'sb-flag-row';
+    const mk = (key, label) => {
+      const b = document.createElement('button');
+      b.className = 'sb-flag' + (selectedFlags[key] ? ' on' : '');
+      b.textContent = label;
+      b.onclick = () => { selectedFlags[key] = !selectedFlags[key]; renderPreview(); };
+      return b;
+    };
+    flags.appendChild(mk('pin', t('flagPin')));
+    flags.appendChild(mk('refund', t('flagRefund')));
+    flags.appendChild(mk('unknown', t('flagUnknown')));
+    bar.appendChild(top); bar.appendChild(flags);
+    els.previewSlot.appendChild(bar);
+  }
+
+  function norm(s){ return (s || '').toLowerCase(); }
+
+  function scanCategories(rawText){
+    const text = norm(rawText);
+    let total = 0; const hits = [];
+    CATEGORIES.forEach(cat => {
+      const list = cat.en.concat(cat.hi);
+      const found = list.some(k => text.includes(k.toLowerCase()));
+      if(found){ total += cat.weight; hits.push(cat); }
+    });
+    return { total, hits };
+  }
+
+  function riskFromScore(score){
+    if(score >= 3) return 'DANGER';
+    if(score >= 1) return 'CAUTION';
+    return 'SAFE';
+  }
+
+  function explainHits(hits){
+    if(hits.length === 0) return t('noFlagGeneric');
+    const sorted = hits.slice().sort((a,b) => b.weight - a.weight).slice(0, 2);
+    return sorted.map(h => h.exp[lang]).join('\n\n');
+  }
+
+  function looksLikeQuestion(text){
+    const t2 = norm(text);
+    return /\?/.test(text) || /^(what|how|is|can|should|why|does|do|are)\b/.test(t2) ||
+           /(kya|kaise|kyun|hai kya|kar sakta|kar sakte)/.test(t2);
+  }
+
+  function matchFAQ(rawText){
+    const text = norm(rawText);
+    let best = null, bestScore = 0;
+    FAQS.forEach(f => {
+      const score = f.keys.reduce((s,k) => s + (text.includes(k.toLowerCase()) ? 1 : 0), 0);
+      if(score > bestScore){ bestScore = score; best = f; }
+    });
+    if(best && bestScore > 0) return best;
+    return null;
+  }
+
+  function handleTextOnly(rawText){
+    const scan = scanCategories(rawText);
+    if(scan.hits.length > 0){
+      const risk = riskFromScore(scan.total);
+      addBotMessage(explainHits(scan.hits), risk);
+      return;
+    }
+    if(looksLikeQuestion(rawText)){
+      const faq = matchFAQ(rawText);
+      if(faq){
+        if(faq.en === "LOSTMONEY"){ addBotMessage(t('lostMoneySteps'), null); return; }
+        addBotMessage(faq[lang], null);
+        return;
+      }
+      const suggestions = FAQS.slice(0,4).map(f => "• " + f[lang].split(/[.।]/)[0] + (lang === 'en' ? '.' : '।')).join('\n');
+      addBotMessage(t('faqFallback') + '\n' + suggestions, null);
+      return;
+    }
+    addBotMessage(t('noFlagGeneric'), 'SAFE');
+  }
+
+  function handleImageCheck(rawText){
+    let score = 0; const hits = [];
+    if(selectedFlags.pin){ score += 3; hits.push(CATEGORIES.find(c => c.id === 'pin_receive')); }
+    if(selectedFlags.refund){ score += 1; hits.push(CATEGORIES.find(c => c.id === 'refund_prize')); }
+    if(selectedFlags.unknown){ score += 1; hits.push(CATEGORIES.find(c => c.id === 'urgency')); }
+    const scan = scanCategories(rawText);
+    score += scan.total; hits.push(...scan.hits);
+    const risk = riskFromScore(score);
+    addBotMessage(explainHits(hits), risk);
+  }
+
+  function sendMessage(){
+    const text = els.text.value.trim();
+    if(!text && !pendingImage) return;
+    addUserMessage(text, pendingImage);
+    const hadImage = !!pendingImage;
+    els.text.value = ''; els.text.style.height = 'auto';
+    pendingImage = null; renderPreview();
+
+    setTimeout(() => {
+      try{
+        if(hadImage) handleImageCheck(text);
+        else handleTextOnly(text);
+      }catch(err){
+        addBotMessage(t('error'), null);
+      }
+    }, 260);
+  }
+
+  els.send.onclick = sendMessage;
+  els.text.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+  });
+  els.text.addEventListener('input', () => {
+    els.text.style.height = 'auto';
+    els.text.style.height = Math.min(els.text.scrollHeight, 80) + 'px';
+  });
+
+  renderStatic();
+  addBotMessage(STR.en.greeting, null);
+})();
+</script>
